@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Title</title>
+    <link rel="stylesheet" href="cursor.css">
+    <style>
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cursor-trail {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            animation: fadeOut 2s forwards;
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        .blinking-text {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            font-weight: bold;
+            color: red;
+            animation: blink 0.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .random-div {
+            position: absolute;
+            background-color: rgba(255, 0, 0, 0.5);
+            border: 2px solid yellow;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+            animation: float 3s ease-in-out forwards;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+    </style>
+    <script>
+        function generateRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function changeTitle() {
+            setInterval(function() {
+                document.title = generateRandomString(10);
+            }, 100);
+        }
+
+        function showImages() {
+            let currentImageIndex = 1;
+            const imageCount = 30;
+            const imageElement = document.createElement('img');
+            document.body.appendChild(imageElement);
+
+            setInterval(function() {
+                imageElement.src = `image${currentImageIndex}.jpeg`;
+                currentImageIndex = (currentImageIndex % imageCount) + 1;
+            }, 100);
+        }
+
+        function createCursorTrail(event) {
+            const trail = document.createElement('img');
+            trail.src = 'mouse2.png';
+            trail.classList.add('cursor-trail');
+            document.body.appendChild(trail);
+
+            trail.style.left = `${event.pageX - 0}px`;
+            trail.style.top = `${event.pageY - 0}px`;
+
+            setTimeout(function() {
+                trail.remove();
+            }, 10000);
+        }
+
+        function showBlinkingText() {
+            const blinkingText = document.createElement('div');
+            blinkingText.classList.add('blinking-text');
+            blinkingText.textContent = '';
+            document.body.appendChild(blinkingText);
+        }
+
+        function showRandomAlerts() {
+            setInterval(function() {
+                alert('Clowned!');
+            }, 5500);
+        }
+
+        function spawnRandomDivs() {
+            setInterval(function() {
+                const randomDiv = document.createElement('div');
+                randomDiv.classList.add('random-div');
+                randomDiv.textContent = generateRandomString(5);
+                randomDiv.style.left = `${Math.random() * window.innerWidth}px`;
+                randomDiv.style.top = `${Math.random() * window.innerHeight}px`;
+                document.body.appendChild(randomDiv);
+
+                setTimeout(() => randomDiv.remove(), 3000);
+            }, 5000);
+        }
+
+        function openRandomWindow(windowCount) {
+            const imageIndex = Math.floor(Math.random() * 2) + 1;
+            const image = "image" + imageIndex + ".jpeg";
+            const newWindow = window.open("", "clown" + windowCount, "width=300,height=200,left=" + (Math.random() * window.innerWidth) + ",top=" + (Math.random() * window.innerHeight));
+            if (newWindow) {
+                newWindow.document.write('<img src="' + image + '" alt="Clown Image" width="100%" height="100%">');
+                newWindow.document.write('<audio autoplay><source src="sound.mp3" type="audio/mp3"></audio>');
+                
+                setTimeout(function() {
+                    openRandomWindow(windowCount + 1);
+                }, 1);
+            }
+        }
+
+        function openRedWindow() {
+            setTimeout(function() {
+                window.open('red.html', '_blank');
+            }, 30000); // Otevře nové okno po 30 sekundách
+        }
+
+        window.onload = function() {
+            changeTitle();
+            const audio = new Audio('sound.mp3');
+            audio.loop = true;
+            audio.play();
+            showImages();
+            showBlinkingText();
+            showRandomAlerts();
+            spawnRandomDivs();
+            openRandomWindow(5);
+            openRedWindow();
+
+            document.addEventListener('mousemove', createCursorTrail);
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
